@@ -79,6 +79,13 @@ class MainActivity : AppCompatActivity() {
             myIntent.putExtra("sms_body", "이 앱을 공유해주세요.")
             startActivity(myIntent)
         }
+
+        btnNaverLink.setOnClickListener {
+
+            val myUri = Uri.parse("https://naver.com")
+            val myIntent = Intent(Intent.ACTION_VIEW , myUri)
+            startActivity(myIntent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
