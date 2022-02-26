@@ -1,11 +1,16 @@
 package com.example.intent_20220226
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    val REQ_CODE_NICKNAME = 1000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,6 +37,52 @@ class MainActivity : AppCompatActivity() {
             myIntent.putExtra("메세지", inputMessage)
 
             startActivity(myIntent)
+        }
+
+        btnEditNickname.setOnClickListener {
+
+            val myIntent = Intent(this,EditNicknameActivity::class.java)
+            startActivityForResult(myIntent, REQ_CODE_NICKNAME) // 1000 : 닉네임을 변경하러 간다 . 표식으로 사용
+        }
+
+        btnDial.setOnClickListener {
+
+//            어디에 전화를 걸고 싶은지? 폰번 저장
+
+            val inputPhoneNum = edtPhoneNum.text.toString()
+
+//            전화연결 정보형태 (Uri)로 폰번 가공.
+
+            val myUri = Uri.parse("tel:${inputPhoneNum}") // 어디에 전화를 걸지 정보 가공. 띄어쓰기는 없이.
+
+//            전화 앱으로 화면 전환
+
+            val myIntent = Intent( Intent.ACTION_DIAL , myUri)
+            startActivity(myIntent)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+//        어떤 요청을 마치고 돌아온건지 확인. => 닉네임을 가지러 다녀온게 맞나?
+
+        if (requestCode == REQ_CODE_NICKNAME){
+
+//            OK 눌렀어야 반영. => RESULT_OK가 맞는가?
+            if (resultCode == Activity.RESULT_OK) {
+
+//                닉네임 요청 + OK 둘다 맞다
+//                첨부된 새 닉네임을 꺼내서 > 텍스트뷰에 반영
+
+                val newNickname = data?.getStringExtra("nick")
+                txtNickname.text = newNickname
+
+
+
+            }
+
+
         }
     }
 }
